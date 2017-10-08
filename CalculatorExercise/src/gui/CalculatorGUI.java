@@ -260,6 +260,7 @@ public class CalculatorGUI extends Application{
 		public void compute() {
 			operand1 = oneOperation.compute(operand1);
 			display.setText(Double.toString(operand1));
+			currentState = excessOperatorState;
 		}
 		
 		public void clear() {
@@ -326,6 +327,8 @@ public class CalculatorGUI extends Application{
 			display.setText(Double.toString(operand1));
 			operand2 = 0.0;
 			twoOperation = null;
+			currentState = excessOperatorState;
+
 		}
 		
 		public void clear() {
