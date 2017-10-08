@@ -16,15 +16,17 @@ public class CalculatorGUI extends Application{
 	TextField display;
 	
 	CalculatorState operandState = new OperandState();
-	CalculatorState oneOperatorState = new OneInputOperatorState();
-	CalculatorState twoOperatorState = new TwoInputOperatorState();
+	CalculatorState operatorState = new OperatorState();
+	CalculatorState oneOperationState = new OneOperationState();
+	CalculatorState twoOperationState = new TwoOperationState();
+	CalculatorState secondOperandState = new SecondOperandState();
 	CalculatorState excessOperatorState = new ExcessOperatorState();
 	
 	CalculatorState currentState = operandState;
 	
-	double operand1 = 0.0;
-	double operand2 = 0.0;
-	Operator operation;
+	double operand1, operand2;
+	Operator twoOperation;
+	SingleOperator oneOperation;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -138,11 +140,11 @@ public class CalculatorGUI extends Application{
 		});
 		
 		inverse.setOnAction(e -> {
-			currentState.enterOperator(Operator.INVERSE);
+			currentState.enterOperator(SingleOperator.INVERSE);
 		});
 		
 		sqrt.setOnAction(e -> {
-			currentState.enterOperator(Operator.SQRT);
+			currentState.enterOperator(SingleOperator.SQRT);
 		});
 		
 		clear.setOnAction(e -> {
@@ -151,6 +153,11 @@ public class CalculatorGUI extends Application{
 		
 		clearE.setOnAction(e -> {
 			currentState.clearEntry();
+		});
+		
+		equals.setOnAction(e -> {
+			currentState.compute();
+			System.out.println(currentState);
 		});
 		
 		Scene scene = new Scene(calc, 400, 605);
@@ -164,17 +171,22 @@ public class CalculatorGUI extends Application{
 		Application.launch(args);
 	}
 	
+	/*
+	 * at this state, can only add operand
+	 */
 	public class OperandState implements CalculatorState {
 		public void enterOperand(double operand) {
-			operand1 = operand1*10 +  operand;
+			operand1 = operand;
 			display.setText(Double.toString(operand1));
+			currentState = operatorState;
 		}
 		
 		public void enterOperator(Operator operator) {
-			operation = operator;
-			//currentState = operator.getState();
-			display.setText(operand1 + operation.toString() + operand2);
-
+			
+		}
+		
+		public void enterOperator(SingleOperator operator) {
+			
 		}
 		
 		public void compute() {
@@ -184,7 +196,7 @@ public class CalculatorGUI extends Application{
 		public void clear() {
 			operand1 = 0.0;
 			operand2 = 0.0;
-			operation = null;
+			oneOperation = null;
 		}
 		
 		public void clearEntry() {
@@ -193,13 +205,25 @@ public class CalculatorGUI extends Application{
 		
 	}
 	
-	public class OneInputOperatorState implements CalculatorState {
+	/*
+	 * at this state, can continue adding to operand1 or add operator
+	 */
+	public class OperatorState implements CalculatorState {
 		public void enterOperand(double operand) {
-			
+			operand1 = operand1*10 + operand;
+			display.setText(Double.toString(operand1));
 		}
 		
 		public void enterOperator(Operator operator) {
-			
+			twoOperation = operator;
+			display.setText(Double.toHexString(operand1));
+			currentState = secondOperandState;
+		}
+		
+		public void enterOperator(SingleOperator operator) {
+			oneOperation = operator;
+			display.setText(Double.toString(operand1));
+			currentState = oneOperationState;
 		}
 		
 		public void compute() {
@@ -209,7 +233,7 @@ public class CalculatorGUI extends Application{
 		public void clear() {
 			operand1 = 0.0;
 			operand2 = 0.0;
-			operation = null;
+			oneOperation = null;
 		}
 		
 		public void clearEntry() {
@@ -217,39 +241,54 @@ public class CalculatorGUI extends Application{
 		}
 	}
 	
-	public class TwoInputOperatorState implements CalculatorState {
+	public class OneOperationState implements CalculatorState {
 		public void enterOperand(double operand) {
-			
+	
 		}
 		
 		public void enterOperator(Operator operator) {
-			
+			compute();
+			twoOperation = operator;
+			currentState = secondOperandState;
 		}
 		
+		public void enterOperator(SingleOperator operator) {
+			compute();
+			oneOperation = operator;
+		}
+
 		public void compute() {
-			
+			operand1 = oneOperation.compute(operand1);
+			display.setText(Double.toString(operand1));
 		}
 		
 		public void clear() {
 			operand1 = 0.0;
 			operand2 = 0.0;
-			operation = null;
+			oneOperation = null;
 		}
 		
 		public void clearEntry() {
+			operand2 = 0.0;
 			display.setText("0.0");
 		}
 	}
 	
 	public class SecondOperandState implements CalculatorState {
 		public void enterOperand(double operand) {
-			
+			operand2 = operand2*10 + operand;
+			display.setText(Double.toString(operand2));
+			currentState = twoOperationState;
 		}
 		
 		public void enterOperator(Operator operator) {
 			
 		}
 		
+		public void enterOperator(SingleOperator operator) {
+			
+		}
+
 		public void compute() {
 			
 		}
@@ -257,13 +296,48 @@ public class CalculatorGUI extends Application{
 		public void clear() {
 			operand1 = 0.0;
 			operand2 = 0.0;
-			operation = null;
+			oneOperation = null;
 		}
 		
 		public void clearEntry() {
 			operand2 = 0.0;
 		}
 		
+	}
+	
+	public class TwoOperationState implements CalculatorState {
+		public void enterOperand(double operand) {
+			
+		}
+		public void enterOperator(Operator operator) {
+			compute();
+			twoOperation = operator;
+			currentState = secondOperandState;
+		}
+		
+		public void enterOperator(SingleOperator operator) {
+			compute();
+			oneOperation = operator;
+			currentState = oneOperationState;
+		}
+
+		public void compute() {
+			operand1 = twoOperation.compute(operand1, operand2);
+			display.setText(Double.toString(operand1));
+			operand2 = 0.0;
+			twoOperation = null;
+		}
+		
+		public void clear() {
+			operand1 = 0.0;
+			operand2 = 0.0;
+			oneOperation = null;
+		}
+		
+		public void clearEntry() {
+			operand2 = 0.0;
+		}
+	
 	}
 	
 	public class ExcessOperatorState implements CalculatorState {
@@ -272,7 +346,13 @@ public class CalculatorGUI extends Application{
 		}
 		
 		public void enterOperator(Operator operator) {
-			
+			twoOperation = operator;
+			currentState = secondOperandState;
+		}
+		
+		public void enterOperator(SingleOperator operator) {
+			oneOperation = operator;
+			currentState = oneOperationState;
 		}
 		
 		public void compute() {
@@ -282,7 +362,7 @@ public class CalculatorGUI extends Application{
 		public void clear() {
 			operand1 = 0.0;
 			operand2 = 0.0;
-			operation = null;
+			oneOperation = null;
 		}
 		
 		public void clearEntry() {
