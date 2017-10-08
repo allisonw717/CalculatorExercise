@@ -77,6 +77,7 @@ public class CalculatorGUI extends Application{
 		pane.add(equals, 2, 4);
 		pane.add(add, 3, 4);
 		
+		
 		display = new TextField();
 		VBox calc = new VBox();
 		calc.getChildren().addAll(display,pane);
@@ -160,7 +161,7 @@ public class CalculatorGUI extends Application{
 			System.out.println(currentState);
 		});
 		
-		Scene scene = new Scene(calc, 400, 605);
+		Scene scene = new Scene(calc, 200, 250);
 		primaryStage.setTitle("Calculator");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -197,6 +198,7 @@ public class CalculatorGUI extends Application{
 			operand1 = 0.0;
 			operand2 = 0.0;
 			oneOperation = null;
+			display.setText("0");
 		}
 		
 		public void clearEntry() {
@@ -216,7 +218,7 @@ public class CalculatorGUI extends Application{
 		
 		public void enterOperator(Operator operator) {
 			twoOperation = operator;
-			display.setText(Double.toHexString(operand1));
+			display.setText(Double.toString(operand1));
 			currentState = secondOperandState;
 		}
 		
@@ -234,6 +236,7 @@ public class CalculatorGUI extends Application{
 			operand1 = 0.0;
 			operand2 = 0.0;
 			oneOperation = null;
+			display.setText("0");
 		}
 		
 		public void clearEntry() {
@@ -267,6 +270,7 @@ public class CalculatorGUI extends Application{
 			operand1 = 0.0;
 			operand2 = 0.0;
 			oneOperation = null;
+			display.setText("0");
 		}
 		
 		public void clearEntry() {
@@ -298,6 +302,7 @@ public class CalculatorGUI extends Application{
 			operand1 = 0.0;
 			operand2 = 0.0;
 			oneOperation = null;
+			display.setText("0");
 		}
 		
 		public void clearEntry() {
@@ -335,6 +340,7 @@ public class CalculatorGUI extends Application{
 			operand1 = 0.0;
 			operand2 = 0.0;
 			oneOperation = null;
+			display.setText("0");
 		}
 		
 		public void clearEntry() {
@@ -366,6 +372,7 @@ public class CalculatorGUI extends Application{
 			operand1 = 0.0;
 			operand2 = 0.0;
 			oneOperation = null;
+			display.setText("0");
 		}
 		
 		public void clearEntry() {
