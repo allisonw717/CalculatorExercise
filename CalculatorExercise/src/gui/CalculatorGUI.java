@@ -27,7 +27,7 @@ public class CalculatorGUI extends Application{
 	CalculatorState oneOperationState = new OneOperationState();
 	CalculatorState twoOperationState = new TwoOperationState();
 //	CalculatorState secondOperandState = new SecondOperandState();
-	CalculatorState excessOperatorState = new ExcessOperatorState();
+//	CalculatorState excessOperatorState = new ExcessOperatorState();
 	
 	CalculatorState currentState = operatorState;
 	
@@ -250,7 +250,7 @@ public class CalculatorGUI extends Application{
 			oneOperation = operator;
 			operand1 = oneOperation.compute(operand1);
 			display.setText(operand1%1==0 ? Integer.toString((int)operand1) : Double.toString(operand1));
-			currentState = excessOperatorState;
+//			currentState = excessOperatorState;
 		}
 		
 		//does nothing on purpose 
@@ -289,7 +289,7 @@ public class CalculatorGUI extends Application{
 		public void compute() {
 			operand1 = oneOperation.compute(operand1);
 			display.setText(Double.toString(operand1));
-			currentState = excessOperatorState;
+//			currentState = excessOperatorState;
 		}
 		
 		public void clear() {
@@ -385,11 +385,16 @@ public class CalculatorGUI extends Application{
 				operand2 = Double.parseDouble(display.getText());
 				decimals = false;
 			}
+			System.out.println(operand1);
+			System.out.println(operand2);
 			operand1 = twoOperation.compute(operand1, operand2);
+			System.out.println("After:" + operand1);
+			System.out.println(operand2);
 			display.setText(operand1%1==0 ? Integer.toString((int)operand1) : Double.toString(operand1));
 			operand2 = 0.0;
 			twoOperation = null;
-			currentState = excessOperatorState;
+			//currentState = excessOperatorState;
+			System.out.println("yo wtf " + currentState);
 
 		}
 		
@@ -409,38 +414,39 @@ public class CalculatorGUI extends Application{
 	
 	}
 	
-	public class ExcessOperatorState implements CalculatorState {
-		public void enterOperand(double operand) {
-			
-		}
-		
-		public void enterOperator(Operator operator) {
-			twoOperation = operator;
-			currentState = twoOperationState;
-		}
-		
-		public void enterOperator(SingleOperator operator) {
-			oneOperation = operator;
-			operand1 = oneOperation.compute(operand1);
-			display.setText(Double.toString(operand1));
-		}
-		
-		public void compute() {
-			
-		}
-		
-		public void clear() {
-			operand1 = 0.0;
-			operand2 = 0.0;
-			oneOperation = null;
-			display.setText("0");
-			currentState = operatorState;
-
-		}
-		
-		public void clearEntry() {
-			
-		}
-	}
+//	public class ExcessOperatorState implements CalculatorState {
+//		public void enterOperand(double operand) {
+//			
+//		}
+//		
+//		public void enterOperator(Operator operator) {
+//			twoOperation = operator;
+//			System.out.println("we out here");
+//			currentState = twoOperationState;
+//		}
+//		
+//		public void enterOperator(SingleOperator operator) {
+//			oneOperation = operator;
+//			operand1 = oneOperation.compute(operand1);
+//			display.setText(Double.toString(operand1));
+//		}
+//		
+//		public void compute() {
+//			
+//		}
+//		
+//		public void clear() {
+//			operand1 = 0.0;
+//			operand2 = 0.0;
+//			oneOperation = null;
+//			display.setText("0");
+//			currentState = operatorState;
+//
+//		}
+//		
+//		public void clearEntry() {
+//			
+//		}
+//	}
 }
 
