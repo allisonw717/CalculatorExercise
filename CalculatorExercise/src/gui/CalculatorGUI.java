@@ -34,6 +34,7 @@ public class CalculatorGUI extends Application{
 	double operand1, operand2;
 	Operator twoOperation;
 	SingleOperator oneOperation;
+	boolean equalsPressed;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -205,6 +206,7 @@ public class CalculatorGUI extends Application{
 		});
 		
 		equals.setOnAction(e -> {
+			equalsPressed = true;
 			currentState.compute();
 		});
 		
@@ -309,7 +311,7 @@ public class CalculatorGUI extends Application{
 		boolean decimals;
 		boolean computed;
 		boolean digitsBeforeDec = false;
-		public void enterOperand(double operand) {
+		public void enterOperand(double operand) { //How do you automatically go to operatorState when you hit a number without hitting anything else
 			if(operand!=.5 && !decimals) {
 				operand2 = operand2*10 + operand;
 				display.setText(operand2%1==0 ? Integer.toString((int)operand2) : Double.toString(operand2));
@@ -348,8 +350,12 @@ public class CalculatorGUI extends Application{
 				decimals = false;
 			}
 			if(!computed) {
+				try {
 				operand1 = twoOperation.compute(operand1, operand2);
 				computed = true;
+				} catch (NullPointerException e){
+					operand1 = operand2;
+				}
 			}
 			display.setText(operand1%1==0 ? Integer.toString((int)operand1) : Double.toString(operand1));
 			operand2 = 0.0;
