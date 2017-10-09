@@ -236,7 +236,7 @@ public class CalculatorGUI extends Application{
 			}
 		}
 		
-		public void enterOperator(Operator operator) { //THIS IS WHERE THE DECIMAL DIES 
+		public void enterOperator(Operator operator) { 
 			if(decimals) {
 				operand1 = Double.parseDouble(display.getText());
 				decimals = false;
@@ -250,7 +250,6 @@ public class CalculatorGUI extends Application{
 			oneOperation = operator;
 			operand1 = oneOperation.compute(operand1);
 			display.setText(operand1%1==0 ? Integer.toString((int)operand1) : Double.toString(operand1));
-//			currentState = excessOperatorState;
 		}
 		
 		//does nothing on purpose 
@@ -289,7 +288,6 @@ public class CalculatorGUI extends Application{
 		public void compute() {
 			operand1 = oneOperation.compute(operand1);
 			display.setText(Double.toString(operand1));
-//			currentState = excessOperatorState;
 		}
 		
 		public void clear() {
@@ -307,53 +305,9 @@ public class CalculatorGUI extends Application{
 		}
 	}
 	
-//	public class SecondOperandState implements CalculatorState {
-//		boolean decimals;
-//		public void enterOperand(double operand) {
-//			if(operand!=.5 && !decimals) {
-//				operand2 = operand2*10 + operand;
-//				display.setText(operand2%1==0 ? Integer.toString((int)operand2) : Double.toString(operand2));
-//			} else if (operand == .5 ){
-//				display.setText(display.getText() + ".");
-//				decimals = true;
-//			} else if (!display.getText().equals("0")){
-//				display.setText(display.getText() + Integer.toString((int)operand));
-//			}
-//			
-//			
-//		}
-//		
-//		public void enterOperator(Operator operator) {
-//			
-//		}
-//		
-//		public void enterOperator(SingleOperator operator) {
-//			
-//		}
-//
-//		public void compute() {
-//			operand2 = Double.parseDouble(display.getText());
-//			currentState = twoOperationState;
-//		}
-//		
-//		public void clear() {
-//			operand1 = 0.0;
-//			operand2 = 0.0;
-//			oneOperation = null;
-//			display.setText("0");
-//			currentState = operatorState;
-//
-//		}
-//		
-//		public void clearEntry() {
-//			operand2 = 0.0;
-//			display.setText("0");
-//		}
-//		
-//	}
-	
 	public class TwoOperationState implements CalculatorState {
 		boolean decimals;
+		boolean computed;
 		public void enterOperand(double operand) {
 			if(operand!=.5 && !decimals) {
 				operand2 = operand2*10 + operand;
@@ -364,6 +318,7 @@ public class CalculatorGUI extends Application{
 			} else if (!display.getText().equals("0")){
 				display.setText(display.getText() + Integer.toString((int)operand));
 			}
+			computed = false;
 		}
 		public void enterOperator(Operator operator) {
 			if(decimals) {
@@ -385,17 +340,13 @@ public class CalculatorGUI extends Application{
 				operand2 = Double.parseDouble(display.getText());
 				decimals = false;
 			}
-			System.out.println(operand1);
-			System.out.println(operand2);
-			operand1 = twoOperation.compute(operand1, operand2);
-			System.out.println("After:" + operand1);
-			System.out.println(operand2);
+			if(!computed) {
+				operand1 = twoOperation.compute(operand1, operand2);
+				computed = true;
+			}
 			display.setText(operand1%1==0 ? Integer.toString((int)operand1) : Double.toString(operand1));
 			operand2 = 0.0;
 			twoOperation = null;
-			//currentState = excessOperatorState;
-			System.out.println("yo wtf " + currentState);
-
 		}
 		
 		public void clear() {
@@ -413,40 +364,5 @@ public class CalculatorGUI extends Application{
 		}
 	
 	}
-	
-//	public class ExcessOperatorState implements CalculatorState {
-//		public void enterOperand(double operand) {
-//			
-//		}
-//		
-//		public void enterOperator(Operator operator) {
-//			twoOperation = operator;
-//			System.out.println("we out here");
-//			currentState = twoOperationState;
-//		}
-//		
-//		public void enterOperator(SingleOperator operator) {
-//			oneOperation = operator;
-//			operand1 = oneOperation.compute(operand1);
-//			display.setText(Double.toString(operand1));
-//		}
-//		
-//		public void compute() {
-//			
-//		}
-//		
-//		public void clear() {
-//			operand1 = 0.0;
-//			operand2 = 0.0;
-//			oneOperation = null;
-//			display.setText("0");
-//			currentState = operatorState;
-//
-//		}
-//		
-//		public void clearEntry() {
-//			
-//		}
-//	}
 }
 
