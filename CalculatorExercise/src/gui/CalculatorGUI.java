@@ -308,18 +308,25 @@ public class CalculatorGUI extends Application{
 	public class TwoOperationState implements CalculatorState {
 		boolean decimals;
 		boolean computed;
+		boolean digitsBeforeDec = false;
 		public void enterOperand(double operand) {
 			if(operand!=.5 && !decimals) {
 				operand2 = operand2*10 + operand;
 				display.setText(operand2%1==0 ? Integer.toString((int)operand2) : Double.toString(operand2));
-			} else if (operand == .5 ){
-				display.setText(display.getText() + ".");
+				digitsBeforeDec = true;
+			} else if (operand == .5){
+				if(digitsBeforeDec) {
+					display.setText(display.getText() + ".");
+				} else {
+					display.setText(".");
+				}
 				decimals = true;
 			} else if (!display.getText().equals("0")){
 				display.setText(display.getText() + Integer.toString((int)operand));
 			}
 			computed = false;
 		}
+		//parses operand2 from display after operator is pressed
 		public void enterOperator(Operator operator) {
 			if(decimals) {
 				operand2 = Double.parseDouble(display.getText());
@@ -347,6 +354,7 @@ public class CalculatorGUI extends Application{
 			display.setText(operand1%1==0 ? Integer.toString((int)operand1) : Double.toString(operand1));
 			operand2 = 0.0;
 			twoOperation = null;
+			digitsBeforeDec = false;
 		}
 		
 		public void clear() {
